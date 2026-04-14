@@ -4,19 +4,26 @@ config/config.php
 # Dependencias externas (no versionar FPDF ni futuros paquetes Composer)
 vendor/
 
-# Archivos subidos por usuarios
-uploads/
+# Archivos subidos por usuarios (ignorar contenido, preservar estructura de carpetas)
+uploads/**
+!uploads/*/
+!uploads/*/.gitkeep
 
 # Archivos temporales y de sistema
 *.tmp
 *.log
+*.bak
+*.orig
+error_log
 temp_cookies.txt
+.env
 
-# Scripts de un solo uso (borrar después de usar)
+# Scripts de un solo uso y carpeta de utilidades (borrar después de usar)
 limpiar_datos.php
 generar_hash.php
 test_clientes.php
 eliminar_DB.sql
+test/
 
 # Archivos de trabajo sin relevancia
 Nuevo Documento de texto.txt
