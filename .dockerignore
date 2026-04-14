@@ -1,0 +1,26 @@
+# Control de versiones
+.git
+.gitignore
+
+# Configuración local sensible (se genera en runtime desde env vars)
+config/config.php
+
+# Claude Code
+.claude
+CLAUDE.md
+
+# Archivos temporales
+temp_cookies.txt
+*.log
+*.bak
+*.orig
+error_log
+*.tmp
+
+# Documentación no necesaria en la imagen
+install.md
+
+# Artefactos de sistema operativo
+Thumbs.db
+.DS_Store
+desktop.ini
