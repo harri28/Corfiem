@@ -1,0 +1,38 @@
+# Credenciales y configuración local (nunca versionar)
+config/config.php
+
+# Dependencias externas (no versionar FPDF ni futuros paquetes Composer)
+vendor/
+
+# Archivos subidos por usuarios
+uploads/
+
+# Archivos temporales y de sistema
+*.tmp
+*.log
+temp_cookies.txt
+
+# Scripts de un solo uso (borrar después de usar)
+limpiar_datos.php
+generar_hash.php
+test_clientes.php
+eliminar_DB.sql
+
+# Archivos de trabajo sin relevancia
+Nuevo Documento de texto.txt
+Nuevo Documento de texto (2).txt
+estructura.txt
+tdr.txt
+
+# Claude Code (configuración local del editor)
+.claude/
+
+# Archivos de sistema Windows/Mac
+Thumbs.db
+.DS_Store
+desktop.ini
+
+# IDEs
+.vscode/
+.idea/
+*.swp
