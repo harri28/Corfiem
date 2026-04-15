@@ -1,6 +1,6 @@
 FROM php:8.1-apache
 
-# Dependencias del sistema y extensiones PHP requeridas por CORFIEM ERP
+# Dependencias del sistema y extensiones PHP
 RUN apt-get update && apt-get install -y \
         libpq-dev \
         libonig-dev \
@@ -23,22 +23,27 @@ RUN { \
         echo "memory_limit = 256M"; \
     } > /usr/local/etc/php/conf.d/corfiem.ini
 
-# Habilitar mod_rewrite de Apache
+# Habilitar mod_rewrite
 RUN a2enmod rewrite
 
-# DocumentRoot de Apache
+# 🔥 IMPORTANTE: cambiar Apache a puerto 8080
+RUN sed -i 's/80/8080/g' /etc/apache2/ports.conf \
+    && sed -i 's/:80/:8080/g' /etc/apache2/sites-available/000-default.conf
+
 WORKDIR /var/www/html
 
-# Copiar la aplicación
+# Copiar la app
 COPY . .
 
-# Mover entrypoint fuera del web root y ajustar permisos
+# Preparar entrypoint y permisos (CORREGIDO)
 RUN mv docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh \
     && chmod +x /usr/local/bin/docker-entrypoint.sh \
-    && chown -R www-data:www-data uploads/ \
-    && chmod -R 755 uploads/
+    && mkdir -p uploads/ \
+    && chown -R www-data:www-data /var/www/html \
+    && chmod -R 755 /var/www/html
 
-EXPOSE 80
+# Puerto correcto para Cloud Run
+EXPOSE 8080
 
 ENTRYPOINT ["docker-entrypoint.sh"]
 CMD ["apache2-foreground"]
