@@ -1,0 +1,1515 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manual de Usuario — CORFIEM ERP</title>
+<style>
+  /* ── Reset & base ── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --navy: #1e3a5f;
+    --navy-light: #2d5a8e;
+    --accent: #3b82f6;
+    --accent-light: #eff6ff;
+    --success: #16a34a;
+    --warning: #d97706;
+    --danger: #dc2626;
+    --gray-50: #f9fafb;
+    --gray-100: #f3f4f6;
+    --gray-200: #e5e7eb;
+    --gray-300: #d1d5db;
+    --gray-500: #6b7280;
+    --gray-700: #374151;
+    --gray-900: #111827;
+    --font: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  }
+
+  body {
+    font-family: var(--font);
+    font-size: 10.5pt;
+    line-height: 1.65;
+    color: var(--gray-900);
+    background: #fff;
+  }
+
+  /* ── Print button (screen only) ── */
+  #print-bar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    background: var(--navy);
+    color: #fff;
+    padding: 10px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 9999;
+    box-shadow: 0 2px 8px rgba(0,0,0,.3);
+  }
+  #print-bar span { font-size: 13px; }
+  #print-bar button {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    padding: 7px 20px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    letter-spacing: .3px;
+  }
+  #print-bar button:hover { background: #2563eb; }
+
+  /* ── Page wrapper ── */
+  .doc {
+    max-width: 210mm;
+    margin: 0 auto;
+    padding: 60px 24px 40px; /* top offset for print bar */
+  }
+
+  /* ── Cover page ── */
+  .cover {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 90vh;
+    text-align: center;
+    page-break-after: always;
+    padding: 40px 0;
+  }
+  .cover-logo {
+    width: 80px; height: 80px;
+    background: var(--navy);
+    border-radius: 20px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 28px;
+  }
+  .cover-logo svg { width: 48px; height: 48px; fill: #fff; }
+  .cover h1 {
+    font-size: 36pt;
+    font-weight: 800;
+    color: var(--navy);
+    letter-spacing: -1px;
+    line-height: 1.1;
+  }
+  .cover h1 span { color: var(--accent); }
+  .cover .subtitle {
+    font-size: 14pt;
+    color: var(--gray-500);
+    margin-top: 10px;
+    font-weight: 400;
+  }
+  .cover-divider {
+    width: 80px; height: 4px;
+    background: var(--accent);
+    border-radius: 2px;
+    margin: 28px auto;
+  }
+  .cover .doc-title {
+    font-size: 20pt;
+    font-weight: 700;
+    color: var(--gray-900);
+  }
+  .cover .meta {
+    margin-top: 16px;
+    font-size: 10pt;
+    color: var(--gray-500);
+  }
+  .cover .meta strong { color: var(--gray-700); }
+  .cover-footer {
+    margin-top: auto;
+    padding-top: 60px;
+    font-size: 9pt;
+    color: var(--gray-300);
+  }
+
+  /* ── Table of contents ── */
+  .toc-page {
+    page-break-after: always;
+    padding-bottom: 40px;
+  }
+  .toc-title {
+    font-size: 20pt;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 28px;
+    padding-bottom: 12px;
+    border-bottom: 3px solid var(--navy);
+  }
+  .toc-group { margin-bottom: 8px; }
+  .toc-section {
+    display: flex;
+    align-items: baseline;
+    padding: 5px 0;
+    border-bottom: 1px dotted var(--gray-200);
+  }
+  .toc-section a {
+    color: var(--gray-900);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 10.5pt;
+  }
+  .toc-section a:hover { color: var(--accent); }
+  .toc-section .dots { flex: 1; border-bottom: 1px dotted var(--gray-300); margin: 0 8px; }
+  .toc-subsection {
+    display: flex;
+    align-items: baseline;
+    padding: 3px 0 3px 20px;
+    border-bottom: 1px dotted var(--gray-100);
+  }
+  .toc-subsection a {
+    color: var(--gray-700);
+    text-decoration: none;
+    font-size: 9.5pt;
+  }
+  .toc-num { color: var(--gray-500); font-size: 9pt; min-width: 20px; }
+
+  /* ── Chapter / section headings ── */
+  .chapter {
+    page-break-before: always;
+    padding-top: 8px;
+  }
+  .chapter-header {
+    background: var(--navy);
+    color: #fff;
+    padding: 18px 28px;
+    border-radius: 10px;
+    margin-bottom: 28px;
+  }
+  .chapter-header .ch-num {
+    font-size: 9pt;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: rgba(255,255,255,.6);
+    margin-bottom: 4px;
+  }
+  .chapter-header h2 {
+    font-size: 18pt;
+    font-weight: 800;
+    line-height: 1.2;
+  }
+  .chapter-header p {
+    font-size: 9.5pt;
+    color: rgba(255,255,255,.75);
+    margin-top: 6px;
+  }
+
+  h3 {
+    font-size: 12.5pt;
+    font-weight: 700;
+    color: var(--navy);
+    margin: 24px 0 10px;
+    padding-bottom: 5px;
+    border-bottom: 2px solid var(--accent-light);
+  }
+  h4 {
+    font-size: 10.5pt;
+    font-weight: 700;
+    color: var(--gray-700);
+    margin: 16px 0 8px;
+  }
+
+  p { margin: 0 0 10px; }
+  ul, ol { margin: 0 0 12px 22px; }
+  li { margin-bottom: 4px; }
+
+  /* ── Components ── */
+  .badge {
+    display: inline-block;
+    padding: 2px 9px;
+    border-radius: 20px;
+    font-size: 8.5pt;
+    font-weight: 600;
+    letter-spacing: .2px;
+  }
+  .badge-blue { background: #dbeafe; color: #1d4ed8; }
+  .badge-green { background: #d1fae5; color: #065f46; }
+  .badge-red { background: #fee2e2; color: #991b1b; }
+  .badge-orange { background: #ffedd5; color: #9a3412; }
+  .badge-yellow { background: #fef9c3; color: #854d0e; }
+  .badge-gray { background: var(--gray-100); color: var(--gray-700); }
+  .badge-navy { background: var(--navy); color: #fff; }
+  .badge-indigo { background: #e0e7ff; color: #3730a3; }
+
+  .callout {
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin: 14px 0;
+    font-size: 9.5pt;
+  }
+  .callout-info { background: #eff6ff; border-left: 4px solid #3b82f6; }
+  .callout-warn { background: #fffbeb; border-left: 4px solid #f59e0b; }
+  .callout-tip  { background: #f0fdf4; border-left: 4px solid #22c55e; }
+  .callout strong { display: block; margin-bottom: 3px; color: inherit; }
+
+  /* ── Tables ── */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0 18px;
+    font-size: 9.5pt;
+  }
+  thead tr { background: var(--navy); color: #fff; }
+  thead th { padding: 9px 12px; text-align: left; font-weight: 600; }
+  tbody tr:nth-child(odd)  { background: var(--gray-50); }
+  tbody tr:nth-child(even) { background: #fff; }
+  tbody td { padding: 7px 12px; border-bottom: 1px solid var(--gray-200); }
+  tbody tr:last-child td { border-bottom: none; }
+
+  /* ── Step boxes ── */
+  .steps { counter-reset: step; margin: 14px 0; }
+  .step {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 12px;
+    align-items: flex-start;
+  }
+  .step-num {
+    counter-increment: step;
+    min-width: 28px; height: 28px;
+    background: var(--accent);
+    color: #fff;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 9pt;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .step-body { flex: 1; }
+  .step-body strong { display: block; font-size: 10pt; margin-bottom: 2px; }
+
+  /* ── Field description ── */
+  .fields { margin: 10px 0 16px; }
+  .field {
+    display: flex;
+    gap: 10px;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--gray-100);
+    align-items: flex-start;
+    font-size: 9.5pt;
+  }
+  .field-name {
+    min-width: 160px;
+    font-weight: 600;
+    color: var(--gray-700);
+  }
+  .field-req { color: var(--danger); font-size: 8pt; }
+
+  /* ── Role pills ── */
+  .roles { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0; }
+
+  /* ── Two-column layout ── */
+  .cols-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 12px 0;
+  }
+  .card {
+    background: var(--gray-50);
+    border: 1px solid var(--gray-200);
+    border-radius: 8px;
+    padding: 14px 16px;
+  }
+  .card h5 { font-size: 10pt; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+
+  /* ── Workflow diagram (CSS-only) ── */
+  .flow {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 14px 0;
+    font-size: 9pt;
+  }
+  .flow-step {
+    background: var(--accent-light);
+    border: 1px solid #bfdbfe;
+    border-radius: 6px;
+    padding: 5px 12px;
+    color: #1d4ed8;
+    font-weight: 600;
+  }
+  .flow-arrow { color: var(--gray-400); font-size: 11pt; }
+
+  /* ── Page break helpers ── */
+  .pb-before { page-break-before: always; }
+  .pb-after  { page-break-after: always; }
+  .no-break  { page-break-inside: avoid; }
+
+  /* ── Section number prefix ── */
+  .sec-label {
+    font-size: 8pt;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--accent);
+    margin-bottom: 6px;
+    display: block;
+  }
+
+  /* ── Print styles ── */
+  @media print {
+    #print-bar { display: none !important; }
+    .doc { padding-top: 0; max-width: 100%; }
+    body { font-size: 10pt; }
+    a { color: inherit; text-decoration: none; }
+    .chapter { page-break-before: always; }
+    .no-break { page-break-inside: avoid; }
+    .toc-page { page-break-after: always; }
+    thead { display: table-header-group; }
+    tr { page-break-inside: avoid; }
+    .callout, .card, .step { page-break-inside: avoid; }
+    @page {
+      size: A4;
+      margin: 18mm 20mm 18mm 20mm;
+    }
+    @page :first { margin-top: 0; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Print bar (screen only) -->
+<div id="print-bar">
+  <span>Manual de Usuario — CORFIEM ERP v1.0</span>
+  <button onclick="window.print()">⬇ Descargar / Imprimir PDF</button>
+</div>
+
+<div class="doc">
+
+<!-- ══════════════════════════════════════════ COVER ══ -->
+<div class="cover">
+  <div class="cover-logo">
+    <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+      <rect x="8" y="20" width="48" height="32" rx="4"/>
+      <rect x="20" y="12" width="24" height="12" rx="3"/>
+      <rect x="24" y="28" width="16" height="10" rx="2" fill="rgba(255,255,255,.3)"/>
+    </svg>
+  </div>
+  <h1>CORFIEM<span> ERP</span></h1>
+  <p class="subtitle">Sistema de Gestión Empresarial</p>
+  <div class="cover-divider"></div>
+  <p class="doc-title">Manual de Usuario</p>
+  <p class="meta">
+    <strong>Versión:</strong> 1.0 &nbsp;|&nbsp;
+    <strong>Fecha:</strong> Abril 2026 &nbsp;|&nbsp;
+    <strong>Idioma:</strong> Español (Perú)
+  </p>
+  <p class="meta" style="margin-top:8px">
+    Este documento describe el uso completo del sistema CORFIEM ERP,<br>
+    incluyendo todos los módulos, flujos de trabajo y roles de usuario.
+  </p>
+  <p class="cover-footer">Documento confidencial — Uso interno CORFIEM</p>
+</div>
+
+<!-- ══════════════════════════════════════════ TOC ══ -->
+<div class="toc-page">
+  <div class="toc-title">Tabla de Contenidos</div>
+
+  <div class="toc-group">
+    <div class="toc-section">
+      <a href="#cap1">1. Introducción al Sistema</a>
+      <span class="dots"></span>
+    </div>
+    <div class="toc-subsection"><a href="#cap1-acceso">1.1 Acceso e inicio de sesión</a></div>
+    <div class="toc-subsection"><a href="#cap1-roles">1.2 Roles y permisos</a></div>
+    <div class="toc-subsection"><a href="#cap1-nav">1.3 Navegación general</a></div>
+  </div>
+
+  <div class="toc-group">
+    <div class="toc-section">
+      <a href="#cap2">2. Dashboard — Panel Principal</a>
+      <span class="dots"></span>
+    </div>
+    <div class="toc-subsection"><a href="#cap2-kpi">2.1 Indicadores KPI</a></div>
+    <div class="toc-subsection"><a href="#cap2-feed">2.2 Proyectos recientes e incidencias</a></div>
+  </div>
+
+  <div class="toc-group">
+    <div class="toc-section">
+      <a href="#cap3">3. Actividades Previas — Prospectos</a>
+      <span class="dots"></span>
+    </div>
+    <div class="toc-subsection"><a href="#cap3-lista">3.1 Lista de prospectos</a></div>
+    <div class="toc-subsection"><a href="#cap3-crear">3.2 Crear prospecto</a></div>
+    <div class="toc-subsection"><a href="#cap3-estados">3.3 Estados del pipeline</a></div>
+    <div class="toc-subsection"><a href="#cap3-cot">3.4 Cotizaciones</a></div>
+  </div>
+
+  <div class="toc-group">
+    <div class="toc-section">
+      <a href="#cap4">4. CRM — Gestión de Clientes</a>
+      <span class="dots"></span>
+    </div>
+    <div class="toc-subsection"><a href="#cap4-lista">4.1 Directorio de clientes</a></div>
+    <div class="toc-subsection"><a href="#cap4-crear">4.2 Registrar cliente</a></div>
+    <div class="toc-subsection"><a href="#cap4-inter">4.3 Interacciones y notas</a></div>
+    <div class="toc-subsection"><a href="#cap4-eliminar">4.4 Eliminar cliente</a></div>
+  </div>
+
+  <div class="toc-group">
+    <div class="toc-section">
+      <a href="#cap5">5. Proyectos</a>
+      <span class="dots"></span>
+    </div>
+    <div class="toc-subsection"><a href="#cap5-lista">5.1 Cuadrícula de proyectos</a></div>
+    <div class="toc-subsection"><a href="#cap5-detalle">5.2 Detalle del proyecto</a></div>
+    <div class="toc-subsection"><a href="#cap5-entregables">5.3 Entregables y archivos</a></div>
+    <div class="toc-subsection"><a href="#cap5-estados">5.4 Estados y ciclo de vida</a></div>
+  </div>
+
+  <div class="toc-group">
+    <div class="toc-section">
+      <a href="#cap6">6. Puesta en Marcha — Incidencias</a>
+      <span class="dots"></span>
+    </div>
+    <div class="toc-subsection"><a href="#cap6-reportar">6.1 Reportar incidencia</a></div>
+    <div class="toc-subsection"><a href="#cap6-resolver">6.2 Resolver incidencia</a></div>
+    <div class="toc-subsection"><a href="#cap6-retro">6.3 Retroalimentación</a></div>
+  </div>
+
+  <div class="toc-group">
+    <div class="toc-section">
+      <a href="#cap7">7. Reportes BI — Inteligencia de Negocios</a>
+      <span class="dots"></span>
+    </div>
+    <div class="toc-subsection"><a href="#cap7-charts">7.1 Gráficos y visualizaciones</a></div>
+    <div class="toc-subsection"><a href="#cap7-tabla">7.2 Tabla comparativa de proyectos</a></div>
+  </div>
+
+  <div class="toc-group">
+    <div class="toc-section">
+      <a href="#cap8">8. Capacitación</a>
+      <span class="dots"></span>
+    </div>
+    <div class="toc-subsection"><a href="#cap8-cursos">8.1 Catálogo de cursos</a></div>
+    <div class="toc-subsection"><a href="#cap8-crear">8.2 Crear y administrar un curso</a></div>
+    <div class="toc-subsection"><a href="#cap8-inscripcion">8.3 Inscripciones</a></div>
+    <div class="toc-subsection"><a href="#cap8-quiz">8.4 Cuestionarios y evaluaciones</a></div>
+  </div>
+
+  <div class="toc-group">
+    <div class="toc-section">
+      <a href="#cap9">9. Seguridad y Auditoría</a>
+      <span class="dots"></span>
+    </div>
+    <div class="toc-subsection"><a href="#cap9-auditoria">9.1 Registro de auditoría</a></div>
+    <div class="toc-subsection"><a href="#cap9-usuarios">9.2 Gestión de usuarios</a></div>
+  </div>
+
+  <div class="toc-group">
+    <div class="toc-section">
+      <a href="#cap10">10. Preguntas Frecuentes</a>
+      <span class="dots"></span>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════ CAPÍTULO 1 ══ -->
+<div class="chapter" id="cap1">
+  <div class="chapter-header">
+    <div class="ch-num">Capítulo 1</div>
+    <h2>Introducción al Sistema</h2>
+    <p>Conceptos generales, acceso, navegación y roles de usuario</p>
+  </div>
+
+  <p>
+    <strong>CORFIEM ERP</strong> es un sistema de gestión empresarial diseñado para administrar el ciclo
+    completo del negocio: desde la captación de prospectos y la generación de cotizaciones, hasta la
+    ejecución de proyectos, el control de incidencias, la capacitación del equipo y la generación de
+    reportes gerenciales.
+  </p>
+  <p>
+    El sistema está organizado en módulos accesibles desde la barra lateral izquierda. Cada módulo
+    corresponde a un área funcional de la empresa.
+  </p>
+
+  <!-- 1.1 Acceso -->
+  <h3 id="cap1-acceso">1.1 Acceso e inicio de sesión</h3>
+  <p>Ingresar al sistema desde cualquier navegador moderno (Chrome, Edge, Firefox):</p>
+  <div class="steps">
+    <div class="step"><div class="step-num">1</div><div class="step-body">
+      <strong>Abrir la URL del sistema</strong>
+      Ingresar <code>http://localhost/Corfiem_Cesar</code> en el navegador (o la URL provista por el administrador para el entorno de producción).
+    </div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-body">
+      <strong>Ingresar credenciales</strong>
+      Escribir el correo electrónico y la contraseña. Las credenciales de acceso son asignadas por el administrador del sistema.
+    </div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-body">
+      <strong>Hacer clic en "Iniciar Sesión"</strong>
+      El sistema redirige automáticamente al <em>Dashboard</em> si las credenciales son correctas.
+    </div></div>
+  </div>
+
+  <div class="callout callout-warn">
+    <strong>Contraseña segura</strong>
+    La contraseña debe tener al menos 8 caracteres, combinando letras, números y símbolos.
+    Ante cualquier problema de acceso, contactar al administrador del sistema.
+  </div>
+
+  <!-- 1.2 Roles -->
+  <h3 id="cap1-roles">1.2 Roles y permisos</h3>
+  <p>
+    El sistema maneja cuatro roles de usuario. Cada rol define qué acciones puede realizar el usuario
+    dentro de cada módulo.
+  </p>
+  <table>
+    <thead>
+      <tr>
+        <th>Rol</th>
+        <th>Acceso general</th>
+        <th>Restricciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="badge badge-navy">Admin</span></td>
+        <td>Acceso total al sistema: crear, editar y eliminar en todos los módulos.</td>
+        <td>Ninguna. Puede gestionar usuarios y ver auditoría completa.</td>
+      </tr>
+      <tr>
+        <td><span class="badge badge-indigo">Gerente</span></td>
+        <td>Crear y editar proyectos, CRM completo, ver BI y reportes.</td>
+        <td>No puede eliminar registros ni gestionar usuarios.</td>
+      </tr>
+      <tr>
+        <td><span class="badge badge-blue">Usuario</span></td>
+        <td>Consultar información, agregar notas e interacciones.</td>
+        <td>No puede eliminar ni crear cursos/usuarios. Edición limitada.</td>
+      </tr>
+      <tr>
+        <td><span class="badge badge-gray">Consultor</span></td>
+        <td>Lectura de proyectos asignados y CRM.</td>
+        <td>Solo lectura en la mayoría de módulos.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout callout-info">
+    <strong>Nota sobre permisos</strong>
+    A lo largo de este manual, las secciones restringidas a un rol específico están marcadas con la etiqueta
+    del rol correspondiente. Las funcionalidades sin marca están disponibles para todos los roles.
+  </div>
+
+  <!-- 1.3 Navegación -->
+  <h3 id="cap1-nav">1.3 Navegación general</h3>
+  <p>La interfaz está dividida en tres zonas principales:</p>
+  <div class="cols-2">
+    <div class="card">
+      <h5>Barra lateral (izquierda)</h5>
+      <p>Acceso a todos los módulos del sistema. El ítem activo aparece resaltado en azul.</p>
+      <ul>
+        <li>Dashboard</li>
+        <li>Actividades Previas</li>
+        <li>CRM — Clientes</li>
+        <li>Proyectos</li>
+        <li>Puesta en Marcha</li>
+        <li>Reportes BI</li>
+        <li>Capacitación</li>
+        <li>Auditoría</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h5>Barra superior (topbar)</h5>
+      <p>Muestra el título de la sección actual, el nombre del usuario y el botón de cierre de sesión.</p>
+      <h5 style="margin-top:12px">Área de contenido</h5>
+      <p>Ocupa el área central. Contiene tablas, formularios, gráficos y modales según el módulo activo.</p>
+    </div>
+  </div>
+  <p>
+    Las operaciones de creación y edición se realizan en <strong>ventanas modales</strong> que aparecen
+    sobre la pantalla sin salir de la página actual. Los mensajes de confirmación aparecen como
+    notificaciones <em>toast</em> en la esquina inferior derecha.
+  </p>
+</div>
+
+
+<!-- ══════════════════════════════════════════ CAPÍTULO 2 ══ -->
+<div class="chapter" id="cap2">
+  <div class="chapter-header">
+    <div class="ch-num">Capítulo 2</div>
+    <h2>Dashboard — Panel Principal</h2>
+    <p>Vista general del estado del negocio en tiempo real</p>
+  </div>
+
+  <p>
+    El Dashboard es la pantalla de inicio del sistema. Ofrece una vista consolidada de los indicadores
+    más importantes sin necesidad de ingresar a cada módulo.
+  </p>
+
+  <h3 id="cap2-kpi">2.1 Indicadores KPI</h3>
+  <p>
+    La fila superior muestra seis tarjetas de indicadores clave (KPI) calculados en tiempo real:
+  </p>
+  <table>
+    <thead>
+      <tr><th>Indicador</th><th>Descripción</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>Proyectos Activos</strong></td><td>Cantidad de proyectos en estado diferente a Completado, Cancelado o En Pausa.</td></tr>
+      <tr><td><strong>Proyectos Completados</strong></td><td>Proyectos con estado "Completado".</td></tr>
+      <tr><td><strong>Clientes Activos</strong></td><td>Clientes con al menos un proyecto activo.</td></tr>
+      <tr><td><strong>Incidencias Abiertas</strong></td><td>Incidencias con estado "Abierta" (no resueltas). Se ordena por severidad.</td></tr>
+      <tr><td><strong>Presupuesto Activo</strong></td><td>Suma del presupuesto de todos los proyectos activos (en S/).</td></tr>
+      <tr><td><strong>Avance Promedio</strong></td><td>Porcentaje medio de avance de todos los proyectos activos.</td></tr>
+    </tbody>
+  </table>
+
+  <h3 id="cap2-feed">2.2 Proyectos recientes e incidencias</h3>
+
+  <h4>Proyectos recientes</h4>
+  <p>
+    Muestra los últimos 6 proyectos creados o actualizados. Por cada proyecto se visualiza:
+  </p>
+  <ul>
+    <li>Nombre y código del proyecto.</li>
+    <li>Nombre del cliente.</li>
+    <li>Estado actual (badge de color).</li>
+    <li>Barra de progreso con el porcentaje de avance.</li>
+    <li>Fecha estimada de finalización.</li>
+  </ul>
+
+  <h4>Incidencias críticas</h4>
+  <p>
+    Listado de las 5 incidencias abiertas más graves, ordenadas de mayor a menor severidad
+    (Crítica → Alta → Media → Baja). Permite identificar rápidamente los problemas que requieren atención.
+  </p>
+
+  <h4>Actividad reciente del sistema</h4>
+  <p>
+    Registro de las últimas 8 acciones realizadas en el sistema por cualquier usuario:
+    creaciones, modificaciones, eliminaciones e inicios de sesión. Útil para supervisión del equipo.
+  </p>
+  <div class="callout callout-info">
+    <strong>Actualización de datos</strong>
+    Los datos del dashboard se actualizan al recargar la página. No existe actualización automática en segundo plano.
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════ CAPÍTULO 3 ══ -->
+<div class="chapter" id="cap3">
+  <div class="chapter-header">
+    <div class="ch-num">Capítulo 3</div>
+    <h2>Actividades Previas — Prospectos</h2>
+    <p>Gestión del pipeline comercial: captación, seguimiento y conversión de leads</p>
+  </div>
+
+  <p>
+    El módulo de <strong>Actividades Previas</strong> gestiona el proceso previo a la firma de un contrato:
+    desde el primer contacto con un potencial cliente (<em>prospecto</em>) hasta la generación de la
+    cotización y la conversión en cliente activo.
+  </p>
+
+  <div class="flow">
+    <div class="flow-step">Nuevo prospecto</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">Contactado</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">En evaluación</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">Propuesta enviada</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">Negociación</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">Aceptado / Rechazado</div>
+  </div>
+
+  <h3 id="cap3-lista">3.1 Lista de prospectos</h3>
+  <p>La vista principal muestra una tabla con todos los prospectos registrados. Las métricas superiores indican:</p>
+  <ul>
+    <li><strong>Total de prospectos</strong> registrados.</li>
+    <li><strong>En evaluación</strong>: prospectos actualmente siendo analizados.</li>
+    <li><strong>Propuestas enviadas</strong>: número de propuestas en curso.</li>
+    <li><strong>Aceptados</strong>: prospectos convertidos en clientes.</li>
+    <li><strong>Tasa de conversión</strong>: porcentaje de prospectos que se convirtieron en clientes.</li>
+  </ul>
+
+  <p><strong>Columnas de la tabla:</strong></p>
+  <table>
+    <thead>
+      <tr><th>Columna</th><th>Descripción</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Código</td><td>Identificador único del prospecto (ej. PROS-001).</td></tr>
+      <tr><td>Contacto / Empresa</td><td>Nombre del contacto y razón social de la empresa.</td></tr>
+      <tr><td>Tipo de Servicio</td><td>Servicio o producto que el prospecto requiere.</td></tr>
+      <tr><td>Estado</td><td>Etapa actual en el pipeline comercial (badge de color).</td></tr>
+      <tr><td>Prioridad</td><td>Nivel de urgencia: Baja, Media, Alta, Urgente.</td></tr>
+      <tr><td>Actividades</td><td>Barra de progreso con actividades completadas (ej. 3/5).</td></tr>
+      <tr><td>Responsable</td><td>Usuario del equipo asignado al seguimiento.</td></tr>
+      <tr><td>Fecha</td><td>Fecha de registro del prospecto.</td></tr>
+      <tr><td>Acciones</td><td>Botones: <strong>Ver detalle</strong> y <strong>Eliminar</strong>.</td></tr>
+    </tbody>
+  </table>
+
+  <h4>Filtros disponibles</h4>
+  <ul>
+    <li><strong>Búsqueda de texto:</strong> busca por nombre, empresa, RUC o contacto.</li>
+    <li><strong>Estado:</strong> filtra por etapa del pipeline.</li>
+    <li><strong>Limpiar filtros:</strong> restablece la vista completa.</li>
+  </ul>
+
+  <h3 id="cap3-crear">3.2 Crear prospecto</h3>
+  <p>Hacer clic en el botón <strong>"+ Nuevo Prospecto"</strong> para abrir el formulario de registro.</p>
+
+  <div class="fields">
+    <div class="field"><div class="field-name">Nombre del Contacto <span class="field-req">*</span></div><div>Persona de contacto en la empresa potencial.</div></div>
+    <div class="field"><div class="field-name">Empresa</div><div>Razón social o nombre comercial de la organización.</div></div>
+    <div class="field"><div class="field-name">RUC</div><div>Número de Registro Único de Contribuyentes (máx. 20 caracteres).</div></div>
+    <div class="field"><div class="field-name">Teléfono</div><div>Número de contacto directo.</div></div>
+    <div class="field"><div class="field-name">Email</div><div>Correo electrónico del contacto.</div></div>
+    <div class="field"><div class="field-name">Dirección</div><div>Dirección física o ubicación de la empresa.</div></div>
+    <div class="field"><div class="field-name">Tipo de Servicio</div><div>Descripción del servicio o solución requerida.</div></div>
+    <div class="field"><div class="field-name">Origen</div><div>Cómo llegó el prospecto: Directo, Referido, Web, Llamada, Email u Otro.</div></div>
+    <div class="field"><div class="field-name">Prioridad</div><div>Nivel de importancia: Baja, Media, Alta o Urgente.</div></div>
+    <div class="field"><div class="field-name">Responsable</div><div>Usuario del equipo asignado. Si se deja en "Auto-asignar", el sistema lo asigna al usuario actual.</div></div>
+    <div class="field"><div class="field-name">Fecha de Contacto</div><div>Fecha del primer contacto (por defecto: hoy).</div></div>
+    <div class="field"><div class="field-name">Notas</div><div>Observaciones adicionales o contexto relevante.</div></div>
+  </div>
+
+  <h3 id="cap3-estados">3.3 Estados del pipeline</h3>
+  <table>
+    <thead>
+      <tr><th>Estado</th><th>Significado</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><span class="badge badge-blue">Nuevo</span></td><td>Prospecto recién registrado, sin contacto previo.</td></tr>
+      <tr><td><span class="badge" style="background:#fef3c7;color:#92400e">Contactado</span></td><td>Se realizó el primer contacto con el prospecto.</td></tr>
+      <tr><td><span class="badge badge-yellow">En Evaluación</span></td><td>El prospecto está analizando la oferta o se está evaluando internamente.</td></tr>
+      <tr><td><span class="badge badge-indigo">Propuesta Enviada</span></td><td>Se envió una cotización o propuesta formal.</td></tr>
+      <tr><td><span class="badge" style="background:#fce7f3;color:#9d174d">Negociación</span></td><td>Se están negociando términos y condiciones.</td></tr>
+      <tr><td><span class="badge badge-green">Aceptado</span></td><td>El prospecto aceptó la propuesta; puede convertirse en cliente.</td></tr>
+      <tr><td><span class="badge badge-red">Rechazado</span></td><td>El prospecto rechazó la propuesta.</td></tr>
+      <tr><td><span class="badge badge-gray">Archivado</span></td><td>Prospecto inactivo, sin seguimiento activo.</td></tr>
+    </tbody>
+  </table>
+
+  <h3 id="cap3-cot">3.4 Cotizaciones</h3>
+  <p>
+    Desde el módulo de Previas se pueden crear cotizaciones asociadas a un prospecto específico.
+    Hacer clic en <strong>"+ Nueva Cotización"</strong> para:
+  </p>
+  <div class="steps">
+    <div class="step"><div class="step-num">1</div><div class="step-body">
+      <strong>Seleccionar el prospecto</strong>
+      Buscar el prospecto por empresa, nombre de contacto o RUC usando el buscador del modal.
+    </div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-body">
+      <strong>Confirmar los datos</strong>
+      El sistema muestra la razón social, RUC y estado del prospecto seleccionado.
+    </div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-body">
+      <strong>Crear la cotización</strong>
+      Al confirmar, se crea el registro de cotización y el sistema redirige al editor de cotización donde se agregan los ítems, montos y condiciones.
+    </div></div>
+  </div>
+
+  <div class="callout callout-tip">
+    <strong>Estados de cotización</strong>
+    Las cotizaciones pueden estar en: <em>Borrador</em>, <em>Enviada</em>, <em>Aceptada</em>, <em>Rechazada</em> o <em>Vencida</em>.
+    El sistema aplica automáticamente el IGV (18%) si la cotización tiene activada la opción <em>Aplica IGV</em>.
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════ CAPÍTULO 4 ══ -->
+<div class="chapter" id="cap4">
+  <div class="chapter-header">
+    <div class="ch-num">Capítulo 4</div>
+    <h2>CRM — Gestión de Clientes</h2>
+    <p>Administración del directorio de clientes, relaciones e interacciones</p>
+  </div>
+
+  <p>
+    El módulo <strong>CRM</strong> centraliza la información de todos los clientes activos e inactivos,
+    su historial de interacciones, proyectos asociados y datos de contacto.
+  </p>
+
+  <h3 id="cap4-lista">4.1 Directorio de clientes</h3>
+  <p>La tabla principal muestra todos los clientes registrados con las siguientes columnas:</p>
+  <table>
+    <thead>
+      <tr><th>Columna</th><th>Descripción</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Razón Social</td><td>Nombre de la empresa y su número de RUC.</td></tr>
+      <tr><td>Sector</td><td>Industria o sector económico (badge de color).</td></tr>
+      <tr><td>Contacto</td><td>Nombre y correo electrónico del contacto principal.</td></tr>
+      <tr><td>Ciudad</td><td>Ubicación geográfica del cliente.</td></tr>
+      <tr><td>Proyectos</td><td>Total de proyectos del cliente y cuántos están activos.</td></tr>
+      <tr><td>Última Interacción</td><td>Fecha del último registro de contacto o nota.</td></tr>
+      <tr><td>Estado</td><td>Activo (verde) / Inactivo (gris).</td></tr>
+      <tr><td>Acciones</td><td><strong>Ver</strong> el detalle, <strong>+ Nota</strong> para agregar interacción, y <span class="badge badge-red">Eliminar</span> (solo Admin).</td></tr>
+    </tbody>
+  </table>
+
+  <h4>Filtros disponibles</h4>
+  <ul>
+    <li><strong>Búsqueda:</strong> razón social, nombre del contacto o correo electrónico.</li>
+    <li><strong>Sector:</strong> filtra por industria.</li>
+    <li><strong>Estado:</strong> activos o inactivos.</li>
+  </ul>
+
+  <h3 id="cap4-crear">4.2 Registrar cliente</h3>
+  <p>Clic en <strong>"+ Nuevo Cliente"</strong>. El sistema puede auto-completar los datos si el cliente ya existe como prospecto.</p>
+
+  <div class="fields">
+    <div class="field"><div class="field-name">Razón Social <span class="field-req">*</span></div><div>Al escribir, el sistema busca en los prospectos existentes y sugiere coincidencias.</div></div>
+    <div class="field"><div class="field-name">RUC / NIT</div><div>Número de identificación tributaria.</div></div>
+    <div class="field"><div class="field-name">Sector</div><div>Seleccionar el sector económico al que pertenece el cliente.</div></div>
+    <div class="field"><div class="field-name">Ciudad</div><div>Ubicación geográfica principal.</div></div>
+    <div class="field"><div class="field-name">Teléfono</div><div>Número de contacto de la empresa.</div></div>
+    <div class="field"><div class="field-name">Email Principal</div><div>Correo corporativo de contacto principal.</div></div>
+  </div>
+  <h4>Datos del contacto principal</h4>
+  <div class="fields">
+    <div class="field"><div class="field-name">Nombre del Contacto</div><div>Persona responsable dentro del cliente.</div></div>
+    <div class="field"><div class="field-name">Cargo</div><div>Puesto que ocupa en la empresa.</div></div>
+    <div class="field"><div class="field-name">Email del Contacto</div><div>Correo personal del contacto.</div></div>
+    <div class="field"><div class="field-name">Teléfono del Contacto</div><div>Número directo del contacto.</div></div>
+    <div class="field"><div class="field-name">Notas</div><div>Observaciones sobre el cliente o el contexto de la relación.</div></div>
+  </div>
+
+  <div class="callout callout-info">
+    <strong>Conversión automática de prospecto</strong>
+    Al registrar un cliente cuya razón social coincide con un prospecto en estado <em>Aceptado</em>,
+    el sistema vincula automáticamente el registro y convierte el prospecto.
+    Además, se crea un proyecto inicial en estado <em>Planificación</em>.
+  </div>
+
+  <h3 id="cap4-inter">4.3 Interacciones y notas</h3>
+  <p>
+    Las interacciones son registros de los contactos realizados con el cliente. Para agregar una
+    nueva interacción, clic en <strong>"+ Nota"</strong> en la fila del cliente.
+  </p>
+  <div class="fields">
+    <div class="field"><div class="field-name">Tipo</div><div>
+      <span class="badge badge-gray">Nota</span>
+      <span class="badge badge-blue">Llamada</span>
+      <span class="badge badge-green">Email</span>
+      <span class="badge badge-indigo">Reunión</span>
+      <span class="badge badge-yellow">Visita</span>
+      <span class="badge badge-orange">WhatsApp</span>
+    </div></div>
+    <div class="field"><div class="field-name">Asunto</div><div>Título breve de la interacción.</div></div>
+    <div class="field"><div class="field-name">Descripción</div><div>Detalle completo de lo conversado, acordado o registrado.</div></div>
+  </div>
+  <p>Las interacciones quedan registradas con fecha, hora y usuario que las creó. Se visualizan en la sección inferior de la pantalla del módulo CRM.</p>
+
+  <h3 id="cap4-eliminar">4.4 Eliminar cliente <span class="badge badge-red">Solo Admin</span></h3>
+  <p>
+    La eliminación de un cliente es una operación destructiva e irreversible. Solo los usuarios con
+    rol <strong>Admin</strong> pueden realizarla. El proceso exige confirmación en tres pasos:
+  </p>
+  <div class="steps">
+    <div class="step"><div class="step-num">1</div><div class="step-body">
+      <strong>Clic en el ícono de eliminar</strong>
+      Aparece un modal de advertencia indicando el nombre del cliente y los proyectos asociados que se eliminarán.
+    </div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-body">
+      <strong>Revisar el impacto</strong>
+      El modal muestra cuántos proyectos, entregables y archivos serán eliminados permanentemente.
+    </div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-body">
+      <strong>Escribir el nombre del cliente para confirmar</strong>
+      Se debe escribir exactamente la razón social del cliente en el campo de confirmación antes de poder proceder.
+    </div></div>
+  </div>
+  <div class="callout callout-warn">
+    <strong>Eliminación en cascada</strong>
+    Al eliminar un cliente se eliminan también: todos sus proyectos, entregables, archivos adjuntos físicos,
+    pagos y documentos de conformidad. Esta acción <strong>no se puede deshacer</strong>.
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════ CAPÍTULO 5 ══ -->
+<div class="chapter" id="cap5">
+  <div class="chapter-header">
+    <div class="ch-num">Capítulo 5</div>
+    <h2>Proyectos</h2>
+    <p>Planificación, seguimiento de avance, entregables y documentos de proyecto</p>
+  </div>
+
+  <p>
+    El módulo de <strong>Proyectos</strong> permite gestionar el ciclo de vida completo de cada proyecto:
+    desde la planificación inicial hasta el cierre, controlando entregables, avance, presupuesto y archivos.
+  </p>
+
+  <h3 id="cap5-lista">5.1 Cuadrícula de proyectos</h3>
+  <p>Los indicadores de la parte superior muestran:</p>
+  <ul>
+    <li><strong>Total proyectos</strong> registrados en el sistema.</li>
+    <li><strong>Proyectos activos:</strong> en estados distintos a Completado, Cancelado o En Pausa.</li>
+    <li><strong>Completados:</strong> proyectos finalizados exitosamente.</li>
+    <li><strong>Presupuesto activo:</strong> suma presupuestada de proyectos activos (S/).</li>
+    <li><strong>Avance promedio:</strong> porcentaje medio de progreso de proyectos activos.</li>
+  </ul>
+
+  <p>Cada proyecto se muestra como una <strong>tarjeta</strong> con:</p>
+  <ul>
+    <li>Código y nombre del proyecto.</li>
+    <li>Nombre del cliente.</li>
+    <li>Badges de estado y prioridad.</li>
+    <li>Barra de progreso con porcentaje de avance.</li>
+    <li>Contador de entregables completados (ej. 4/7).</li>
+    <li>Presupuesto y fecha estimada de finalización.</li>
+  </ul>
+
+  <h4>Filtros y ordenamiento</h4>
+  <ul>
+    <li><strong>Búsqueda:</strong> código, nombre o cliente.</li>
+    <li><strong>Cliente:</strong> filtrar por cliente específico.</li>
+    <li><strong>Estado</strong> y <strong>Prioridad:</strong> selección múltiple.</li>
+    <li><strong>Ordenar por:</strong> código, nombre, avance, presupuesto, fechas, entre otros.</li>
+    <li><strong>Paginación:</strong> 15 proyectos por página.</li>
+  </ul>
+
+  <h3 id="cap5-detalle">5.2 Detalle del proyecto</h3>
+  <p>
+    Al hacer clic en una tarjeta de proyecto se accede a la vista de detalle. Esta página tiene varias
+    pestañas para organizar la información:
+  </p>
+  <table>
+    <thead>
+      <tr><th>Pestaña</th><th>Contenido</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>Información</strong></td><td>Datos generales del proyecto: descripción, alcance, responsable, fechas, presupuesto, costo real y avance.</td></tr>
+      <tr><td><strong>Entregables</strong></td><td>Lista de entregables con estado, porcentaje y archivos adjuntos.</td></tr>
+      <tr><td><strong>Actividades</strong></td><td>Tareas o actividades asociadas al proyecto.</td></tr>
+      <tr><td><strong>Documentos</strong></td><td>Documentos administrativos del proyecto (contratos, actas, etc.).</td></tr>
+    </tbody>
+  </table>
+
+  <h4>Edición de información del proyecto</h4>
+  <p>En la pestaña <em>Información</em> se pueden editar:</p>
+  <div class="fields">
+    <div class="field"><div class="field-name">Estado</div><div>Cambiar la etapa del proyecto (ver estados en sección 5.4).</div></div>
+    <div class="field"><div class="field-name">Responsable</div><div>Usuario del equipo a cargo del proyecto.</div></div>
+    <div class="field"><div class="field-name">Fecha Inicio</div><div>Fecha oficial de inicio del proyecto.</div></div>
+    <div class="field"><div class="field-name">Fecha Fin Estimada</div><div>Fecha planificada de cierre.</div></div>
+    <div class="field"><div class="field-name">Presupuesto</div><div>Monto presupuestado en soles (S/).</div></div>
+    <div class="field"><div class="field-name">Costo Real</div><div>Costo efectivo incurrido hasta la fecha.</div></div>
+    <div class="field"><div class="field-name">Avance %</div><div>Porcentaje de avance manual (se recalcula automáticamente cuando se actualizan entregables).</div></div>
+  </div>
+
+  <h3 id="cap5-entregables">5.3 Entregables y archivos</h3>
+  <p>
+    Los entregables son los productos o resultados concretos que debe producir el proyecto.
+    El avance global del proyecto se calcula automáticamente en base al porcentaje de cada entregable.
+  </p>
+  <h4>Campos de cada entregable</h4>
+  <div class="fields">
+    <div class="field"><div class="field-name">Nombre</div><div>Descripción del entregable (ej. "Informe técnico final").</div></div>
+    <div class="field"><div class="field-name">Estado</div><div>
+      <span class="badge badge-gray">Pendiente</span>
+      <span class="badge badge-yellow">En proceso</span>
+      <span class="badge badge-green">Completado</span>
+    </div></div>
+    <div class="field"><div class="field-name">Porcentaje de avance</div><div>De 0 a 100%. Afecta el avance global del proyecto.</div></div>
+    <div class="field"><div class="field-name">Archivos adjuntos</div><div>Documentos, imágenes, PDFs o ZIPs relacionados al entregable.</div></div>
+    <div class="field"><div class="field-name">Fecha de ampliación</div><div>Si el entregable tuvo un plazo extendido, aparece una alerta amarilla con la fecha.</div></div>
+  </div>
+
+  <h4>Carga de archivos</h4>
+  <p>Formatos permitidos: <code>PDF, JPG, PNG, DOC, DOCX, ZIP</code>.</p>
+  <p>Tamaño máximo: <strong>20 MB</strong> por archivo (archivos ZIP: hasta <strong>200 MB</strong>).</p>
+  <p>Los archivos se almacenan en el servidor y pueden descargarse en cualquier momento desde la lista de entregables.</p>
+
+  <div class="callout callout-info">
+    <strong>Cálculo automático de avance</strong>
+    El porcentaje de avance del proyecto se recalcula automáticamente cada vez que se modifica
+    el porcentaje de un entregable. No es necesario actualizar el avance del proyecto manualmente.
+  </div>
+
+  <h3 id="cap5-estados">5.4 Estados y ciclo de vida del proyecto</h3>
+  <table>
+    <thead>
+      <tr><th>Estado</th><th>Descripción</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><span class="badge badge-blue">Planificación</span></td><td>Proyecto en fase inicial; aún no se han iniciado las actividades.</td></tr>
+      <tr><td><span class="badge badge-indigo">En Curso</span></td><td>Proyecto en ejecución activa.</td></tr>
+      <tr><td><span class="badge badge-yellow">Validación</span></td><td>Entregables completados; pendiente de revisión y aceptación por el cliente.</td></tr>
+      <tr><td><span class="badge badge-green">Completado</span></td><td>Proyecto finalizado y aceptado.</td></tr>
+      <tr><td><span class="badge badge-red">Cancelado</span></td><td>Proyecto interrumpido definitivamente.</td></tr>
+      <tr><td><span class="badge badge-gray">En Pausa</span></td><td>Proyecto temporalmente suspendido.</td></tr>
+    </tbody>
+  </table>
+</div>
+
+
+<!-- ══════════════════════════════════════════ CAPÍTULO 6 ══ -->
+<div class="chapter" id="cap6">
+  <div class="chapter-header">
+    <div class="ch-num">Capítulo 6</div>
+    <h2>Puesta en Marcha — Incidencias</h2>
+    <p>Reporte, seguimiento y resolución de problemas durante la ejecución de proyectos</p>
+  </div>
+
+  <p>
+    El módulo de <strong>Puesta en Marcha</strong> permite reportar y hacer seguimiento de incidencias
+    técnicas, consultas, errores y bloqueos que surgen durante la ejecución de proyectos.
+  </p>
+
+  <h3 id="cap6-reportar">6.1 Reportar una incidencia</h3>
+  <p>Clic en <strong>"+ Reportar Incidencia"</strong> para abrir el formulario de registro.</p>
+
+  <div class="fields">
+    <div class="field"><div class="field-name">Título <span class="field-req">*</span></div><div>Descripción breve y concisa del problema.</div></div>
+    <div class="field"><div class="field-name">Proyecto <span class="field-req">*</span></div><div>Seleccionar el proyecto al que pertenece la incidencia.</div></div>
+    <div class="field"><div class="field-name">Tipo</div><div>
+      <span class="badge badge-red">Error</span>
+      <span class="badge badge-blue">Mejora</span>
+      <span class="badge badge-gray">Consulta</span>
+      <span class="badge badge-orange">Bloqueo</span>
+    </div></div>
+    <div class="field"><div class="field-name">Severidad</div><div>
+      <span class="badge badge-red">Crítica</span>
+      <span class="badge badge-orange">Alta</span>
+      <span class="badge badge-yellow">Media</span>
+      <span class="badge badge-green">Baja</span>
+    </div></div>
+    <div class="field"><div class="field-name">Asignar a</div><div>Usuario del equipo responsable de atender la incidencia. Opcional.</div></div>
+    <div class="field"><div class="field-name">Descripción <span class="field-req">*</span></div><div>Detalle completo del problema, pasos para reproducirlo y contexto relevante.</div></div>
+  </div>
+
+  <p>Al guardar, la incidencia queda registrada con estado <span class="badge badge-red">Abierta</span> y fecha y hora automáticas.</p>
+
+  <h4>Tabla de incidencias</h4>
+  <p>La vista principal muestra todas las incidencias ordenadas por severidad (Crítica primero) y luego por fecha de reporte. Las columnas incluyen:</p>
+  <ul>
+    <li>Severidad (badge de color).</li>
+    <li>Título y descripción resumida.</li>
+    <li>Proyecto asociado.</li>
+    <li>Tipo de incidencia.</li>
+    <li>Usuario que la reportó y usuario asignado.</li>
+    <li>Fecha de reporte y fecha de resolución (si aplica).</li>
+    <li>Estado actual.</li>
+    <li>Botones: <strong>Ver detalle</strong> y <strong>Resolver</strong> (si no está resuelta o cerrada).</li>
+  </ul>
+
+  <h4>Filtros disponibles</h4>
+  <ul>
+    <li>Búsqueda por título o descripción.</li>
+    <li>Filtro por <strong>Proyecto</strong>, <strong>Estado</strong> y <strong>Severidad</strong>.</li>
+  </ul>
+
+  <h3 id="cap6-resolver">6.2 Resolver una incidencia</h3>
+  <p>
+    Cuando una incidencia ha sido atendida, hacer clic en <strong>"Resolver"</strong> en la fila
+    correspondiente para registrar la solución.
+  </p>
+  <div class="fields">
+    <div class="field"><div class="field-name">Nuevo estado</div><div>
+      <span class="badge badge-yellow">En proceso</span>
+      <span class="badge badge-green">Resuelta</span>
+      <span class="badge badge-gray">Cerrada</span>
+    </div></div>
+    <div class="field"><div class="field-name">Descripción de la solución</div><div>Explicación de la acción tomada para resolver el problema. Se registra y queda visible en el detalle de la incidencia.</div></div>
+  </div>
+  <p>Al guardar, el sistema registra automáticamente la fecha y hora de resolución.</p>
+
+  <h3 id="cap6-retro">6.3 Retroalimentación de beneficiarios</h3>
+  <p>
+    La sección inferior del módulo muestra las notas de retroalimentación registradas por los beneficiarios
+    de cada proyecto (provenientes del módulo CRM como notas de tipo <em>Nota</em>).
+    Cada tarjeta muestra: cliente, proyecto, descripción, fecha y usuario que registró la nota.
+    Desde aquí se puede navegar al CRM para agregar nuevas notas.
+  </p>
+</div>
+
+
+<!-- ══════════════════════════════════════════ CAPÍTULO 7 ══ -->
+<div class="chapter" id="cap7">
+  <div class="chapter-header">
+    <div class="ch-num">Capítulo 7</div>
+    <h2>Reportes BI — Inteligencia de Negocios</h2>
+    <p>Visualizaciones, gráficos y análisis de desempeño del negocio</p>
+  </div>
+
+  <p>
+    El módulo de <strong>Reportes BI</strong> presenta datos analíticos del negocio en forma de
+    gráficos interactivos y tablas de comparación, orientado a la toma de decisiones gerenciales.
+  </p>
+
+  <div class="callout callout-info">
+    <strong>Acceso</strong>
+    Este módulo es de <strong>solo lectura</strong>. Todos los roles pueden visualizar los reportes,
+    pero no es posible modificar datos desde aquí.
+  </div>
+
+  <h3 id="cap7-charts">7.1 Gráficos y visualizaciones</h3>
+
+  <table>
+    <thead>
+      <tr><th>Gráfico</th><th>Tipo</th><th>Descripción</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Proyectos por Mes</strong></td>
+        <td>Barras</td>
+        <td>Cantidad de proyectos creados en los últimos 12 meses. Permite identificar tendencias de crecimiento.</td>
+      </tr>
+      <tr>
+        <td><strong>Distribución por Estado</strong></td>
+        <td>Dona</td>
+        <td>Proporción de proyectos en cada estado (Planificación, En Curso, Validación, Completado, etc.).</td>
+      </tr>
+      <tr>
+        <td><strong>Presupuesto vs. Costo Real</strong></td>
+        <td>Líneas</td>
+        <td>Comparación mensual entre el presupuesto planificado y el costo real incurrido en proyectos.</td>
+      </tr>
+      <tr>
+        <td><strong>Top Clientes</strong></td>
+        <td>Barras horizontales</td>
+        <td>Los 5 clientes con mayor cantidad de proyectos y presupuesto acumulado.</td>
+      </tr>
+      <tr>
+        <td><strong>Avance de Proyectos Activos</strong></td>
+        <td>Barras de progreso</td>
+        <td>Porcentaje de avance de los proyectos activos, ordenado de mayor a menor progreso.</td>
+      </tr>
+      <tr>
+        <td><strong>Incidencias por Severidad</strong></td>
+        <td>Barras + Tabla</td>
+        <td>Distribución de incidencias por nivel (Crítica, Alta, Media, Baja) con conteo de resueltas y pendientes.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3 id="cap7-tabla">7.2 Tabla comparativa de proyectos</h3>
+  <p>
+    La tabla "Comparativa de Proyectos" muestra los últimos 10 proyectos con información financiera
+    y de avance consolidada:
+  </p>
+  <table>
+    <thead>
+      <tr><th>Columna</th><th>Descripción</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Proyecto</td><td>Nombre del proyecto.</td></tr>
+      <tr><td>Cliente</td><td>Razón social del cliente.</td></tr>
+      <tr><td>Avance</td><td>Barra de progreso con porcentaje.</td></tr>
+      <tr><td>Presupuesto</td><td>Monto planificado en S/.</td></tr>
+      <tr><td>Costo Real</td><td>Gasto efectivo en S/.</td></tr>
+      <tr><td>Variación</td><td>Diferencia porcentual entre presupuesto y costo real. Verde = bajo presupuesto, Rojo = sobre presupuesto.</td></tr>
+      <tr><td>Fecha Fin</td><td>Fecha estimada de cierre del proyecto.</td></tr>
+      <tr><td>Estado</td><td>Estado actual del proyecto (badge de color).</td></tr>
+    </tbody>
+  </table>
+</div>
+
+
+<!-- ══════════════════════════════════════════ CAPÍTULO 8 ══ -->
+<div class="chapter" id="cap8">
+  <div class="chapter-header">
+    <div class="ch-num">Capítulo 8</div>
+    <h2>Capacitación</h2>
+    <p>Gestión de cursos, inscripciones, materiales y evaluaciones del equipo</p>
+  </div>
+
+  <p>
+    El módulo de <strong>Capacitación</strong> es el sistema de gestión de aprendizaje (LMS) integrado
+    al ERP. Permite organizar cursos, gestionar inscripciones, compartir materiales y aplicar evaluaciones.
+  </p>
+
+  <h4>Indicadores del módulo</h4>
+  <table>
+    <thead>
+      <tr><th>Indicador</th><th>Descripción</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Total Cursos</td><td>Número total de cursos registrados (todos los estados).</td></tr>
+      <tr><td>Cursos Activos</td><td>Cursos en estado "Publicado".</td></tr>
+      <tr><td>Inscripciones</td><td>Total de inscripciones en todos los cursos.</td></tr>
+      <tr><td>Aprobados</td><td>Total de participantes que completaron y aprobaron algún curso.</td></tr>
+    </tbody>
+  </table>
+
+  <h3 id="cap8-cursos">8.1 Catálogo de cursos</h3>
+  <p>Los cursos se muestran como tarjetas con:</p>
+  <ul>
+    <li>Título y estado (<span class="badge badge-gray">Borrador</span> <span class="badge badge-green">Publicado</span> <span class="badge badge-orange">Archivado</span>).</li>
+    <li>Descripción resumida.</li>
+    <li>Duración en horas, modalidad y capacidad máxima.</li>
+    <li>Porcentaje de aprobación de los inscritos.</li>
+    <li>Nombre del instructor asignado.</li>
+    <li>Cantidad de materiales y evaluaciones disponibles.</li>
+  </ul>
+  <p><strong>Filtros:</strong> búsqueda por título y filtro por estado del curso.</p>
+
+  <h3 id="cap8-crear">8.2 Crear y administrar un curso <span class="badge badge-red">Solo Admin</span></h3>
+  <p>Clic en <strong>"+ Nuevo Curso"</strong> para acceder al formulario de creación.</p>
+
+  <div class="fields">
+    <div class="field"><div class="field-name">Título <span class="field-req">*</span></div><div>Nombre del curso.</div></div>
+    <div class="field"><div class="field-name">Descripción</div><div>Resumen del contenido y objetivos del curso.</div></div>
+    <div class="field"><div class="field-name">Nivel <span class="field-req">*</span></div><div>Básico, Intermedio o Avanzado.</div></div>
+    <div class="field"><div class="field-name">Instructor</div><div>Usuario del sistema que dicta el curso.</div></div>
+    <div class="field"><div class="field-name">Duración (horas)</div><div>Número de horas totales del curso.</div></div>
+    <div class="field"><div class="field-name">Modalidad</div><div>Presencial, Virtual o Híbrido.</div></div>
+    <div class="field"><div class="field-name">Máx. Participantes</div><div>Límite de inscripciones. Vacío = sin límite.</div></div>
+    <div class="field"><div class="field-name">Estado inicial</div><div>Borrador (oculto para usuarios) o Publicado (visible para todos).</div></div>
+    <div class="field"><div class="field-name">Fecha de Inicio / Fin</div><div>Rango de fechas del curso.</div></div>
+  </div>
+
+  <h4>Gestión de materiales</h4>
+  <p>
+    Desde el detalle del curso, pestaña <strong>Materiales</strong>, se pueden subir recursos de aprendizaje:
+    documentos, presentaciones, videos o enlaces. Los participantes inscritos pueden descargarlos.
+  </p>
+
+  <h3 id="cap8-inscripcion">8.3 Inscripciones</h3>
+  <p>
+    La pestaña <strong>Inscripciones</strong> del curso muestra la lista de participantes con:
+  </p>
+  <table>
+    <thead>
+      <tr><th>Columna</th><th>Descripción</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Nombre</td><td>Nombre completo del participante.</td></tr>
+      <tr><td>Email</td><td>Correo electrónico de contacto.</td></tr>
+      <tr><td>Empresa</td><td>Organización del participante.</td></tr>
+      <tr><td>Fecha de Inscripción</td><td>Cuándo se registró en el curso.</td></tr>
+      <tr><td>Estado</td><td>
+        <span class="badge badge-yellow">Pendiente</span>
+        <span class="badge badge-blue">Completado</span>
+        <span class="badge badge-green">Aprobado</span>
+      </td></tr>
+      <tr><td>Calificación</td><td>Nota obtenida en las evaluaciones del curso.</td></tr>
+    </tbody>
+  </table>
+  <p>El administrador puede aprobar o rechazar inscripciones individualmente, y descargar el listado de participantes.</p>
+
+  <h3 id="cap8-quiz">8.4 Cuestionarios y evaluaciones</h3>
+  <p>
+    La pestaña <strong>Cuestionarios</strong> permite crear y gestionar evaluaciones para el curso.
+  </p>
+  <h4>Crear cuestionario <span class="badge badge-red">Solo Admin</span></h4>
+  <p>
+    Clic en <strong>"Nuevo Cuestionario"</strong>. Se abre el editor donde se pueden agregar preguntas de:
+  </p>
+  <ul>
+    <li><strong>Opción múltiple:</strong> una o varias respuestas correctas.</li>
+    <li><strong>Verdadero / Falso.</strong></li>
+    <li><strong>Respuesta abierta (ensayo):</strong> texto libre, calificada manualmente.</li>
+  </ul>
+  <p>Cada pregunta tiene un valor en puntos. Se define la calificación mínima para aprobar el cuestionario.</p>
+
+  <h4>Tomar evaluación (participante)</h4>
+  <p>
+    Al acceder a la evaluación, el participante responde las preguntas y envía sus respuestas.
+    El sistema muestra el resultado inmediatamente para preguntas objetivas, o tras revisión manual
+    para preguntas de ensayo. La calificación queda registrada en la ficha de inscripción.
+  </p>
+</div>
+
+
+<!-- ══════════════════════════════════════════ CAPÍTULO 9 ══ -->
+<div class="chapter" id="cap9">
+  <div class="chapter-header">
+    <div class="ch-num">Capítulo 9</div>
+    <h2>Seguridad y Auditoría</h2>
+    <p>Trazabilidad de cambios, gestión de usuarios y control de accesos</p>
+  </div>
+
+  <p>
+    El módulo de <strong>Auditoría</strong> proporciona visibilidad completa sobre todas las acciones
+    realizadas en el sistema y permite al administrador gestionar los usuarios y sus permisos.
+  </p>
+
+  <div class="callout callout-warn">
+    <strong>Acceso restringido</strong>
+    Este módulo es accesible únicamente para usuarios con rol <span class="badge badge-navy">Admin</span>.
+  </div>
+
+  <h3 id="cap9-auditoria">9.1 Registro de auditoría</h3>
+  <p>
+    La tabla de auditoría registra <strong>todas</strong> las acciones relevantes del sistema con
+    total trazabilidad. Cada registro muestra:
+  </p>
+  <table>
+    <thead>
+      <tr><th>Campo</th><th>Descripción</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Usuario</td><td>Nombre del usuario que realizó la acción.</td></tr>
+      <tr><td>Acción</td><td>
+        <span class="badge badge-green">CREATE</span>
+        <span class="badge badge-blue">UPDATE</span>
+        <span class="badge badge-red">DELETE</span>
+        <span class="badge badge-indigo">LOGIN</span>
+        <span class="badge badge-gray">LOGOUT</span>
+      </td></tr>
+      <tr><td>Módulo</td><td>Sección del sistema donde se realizó la acción (ej. proyectos, clientes).</td></tr>
+      <tr><td>Registro ID</td><td>Identificador del registro afectado.</td></tr>
+      <tr><td>Fecha / Hora</td><td>Timestamp exacto de la acción.</td></tr>
+      <tr><td>Dirección IP</td><td>IP desde donde se realizó la acción.</td></tr>
+      <tr><td>Datos antes</td><td>Snapshot JSON del registro antes de la modificación (solo en UPDATE y DELETE).</td></tr>
+      <tr><td>Datos después</td><td>Snapshot JSON del registro tras la modificación.</td></tr>
+    </tbody>
+  </table>
+
+  <h4>Filtros disponibles</h4>
+  <ul>
+    <li>Búsqueda por nombre de usuario, email o módulo.</li>
+    <li>Filtro por <strong>Usuario</strong> específico.</li>
+    <li>Filtro por <strong>Módulo</strong> (proyectos, clientes, usuarios, etc.).</li>
+    <li>Filtro por <strong>Acción</strong> (CREATE, UPDATE, DELETE, LOGIN, LOGOUT).</li>
+    <li>Filtro por <strong>rango de fechas</strong> (desde / hasta).</li>
+  </ul>
+  <p>El registro muestra 25 entradas por página, ordenadas de más reciente a más antigua.</p>
+
+  <h3 id="cap9-usuarios">9.2 Gestión de usuarios <span class="badge badge-red">Solo Admin</span></h3>
+  <p>La sección de usuarios muestra la tabla de cuentas del sistema con columnas:</p>
+  <ul>
+    <li>Nombre completo, email, rol, estado (Activo/Inactivo), último acceso y fecha de creación.</li>
+    <li>Botones de <strong>Editar</strong> y <strong>Eliminar</strong> por usuario.</li>
+  </ul>
+
+  <h4>Crear usuario</h4>
+  <p>Clic en <strong>"+ Nuevo Usuario"</strong>.</p>
+  <div class="fields">
+    <div class="field"><div class="field-name">Nombre <span class="field-req">*</span></div><div>Primer nombre del usuario.</div></div>
+    <div class="field"><div class="field-name">Apellido <span class="field-req">*</span></div><div>Apellido del usuario.</div></div>
+    <div class="field"><div class="field-name">Email <span class="field-req">*</span></div><div>Correo de acceso al sistema (debe ser único).</div></div>
+    <div class="field"><div class="field-name">Rol</div><div>Admin, Gerente, Usuario o Consultor.</div></div>
+    <div class="field"><div class="field-name">Estado inicial</div><div>Activo (puede ingresar de inmediato) o Inactivo.</div></div>
+  </div>
+
+  <h4>Editar usuario</h4>
+  <p>Se pueden modificar: nombre, apellido, email, rol y estado. El cambio de contraseña se gestiona a través de un modal separado.</p>
+
+  <h4>Eliminar usuario</h4>
+  <p>
+    La eliminación requiere confirmación. El sistema <strong>no permite</strong> eliminar al usuario
+    administrador actualmente conectado ni al último administrador del sistema.
+  </p>
+  <div class="callout callout-warn">
+    <strong>Importante</strong>
+    Antes de desactivar o eliminar un usuario, asegurarse de reasignar sus proyectos e incidencias activas
+    a otro miembro del equipo para no perder continuidad en las operaciones.
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════ CAPÍTULO 10 ══ -->
+<div class="chapter" id="cap10">
+  <div class="chapter-header">
+    <div class="ch-num">Capítulo 10</div>
+    <h2>Preguntas Frecuentes</h2>
+    <p>Respuestas a dudas comunes sobre el uso del sistema</p>
+  </div>
+
+  <div class="no-break">
+    <h3>¿Por qué no veo el botón de eliminar en algunos registros?</h3>
+    <p>
+      Los botones de eliminación están disponibles únicamente para usuarios con rol <strong>Admin</strong>.
+      Si no ves este botón, es porque tu rol actual no tiene ese permiso.
+      Contacta al administrador del sistema si necesitas eliminar un registro.
+    </p>
+  </div>
+
+  <div class="no-break">
+    <h3>¿Cómo actualizo el avance de un proyecto?</h3>
+    <p>
+      El avance del proyecto se recalcula automáticamente al actualizar el porcentaje de sus entregables.
+      Accede al detalle del proyecto → pestaña <em>Entregables</em> → edita el porcentaje de cada entregable.
+      El avance global se actualizará automáticamente.
+    </p>
+  </div>
+
+  <div class="no-break">
+    <h3>¿Puedo recuperar un registro eliminado?</h3>
+    <p>
+      No directamente desde la interfaz. Las eliminaciones son permanentes. Sin embargo, el
+      <strong>registro de auditoría</strong> (módulo Seguridad) guarda un snapshot JSON del registro
+      antes de eliminarlo. El administrador puede revisar esos datos para recuperar la información manualmente.
+    </p>
+  </div>
+
+  <div class="no-break">
+    <h3>¿Cómo convierto un prospecto en cliente?</h3>
+    <p>
+      Hay dos formas:
+    </p>
+    <ol>
+      <li>Desde el módulo <strong>CRM → Nuevo Cliente</strong>: al escribir la razón social, el sistema sugiere prospectos existentes y auto-completa los datos.</li>
+      <li>Desde el detalle del prospecto: si el estado es <em>Aceptado</em>, aparece la opción de conversión directa.</li>
+    </ol>
+    <p>Al convertir, el prospecto queda vinculado al cliente y se crea automáticamente un proyecto inicial.</p>
+  </div>
+
+  <div class="no-break">
+    <h3>¿Cuál es el tamaño máximo de archivo que puedo subir?</h3>
+    <p>
+      El límite general es <strong>20 MB</strong> por archivo para formatos PDF, JPG, PNG, DOC y DOCX.
+      Los archivos ZIP tienen un límite especial de <strong>200 MB</strong>.
+    </p>
+  </div>
+
+  <div class="no-break">
+    <h3>¿El sistema aplica el IGV automáticamente en las cotizaciones?</h3>
+    <p>
+      Sí. Si una cotización tiene activada la opción <em>Aplica IGV</em>, el sistema calcula
+      automáticamente el 18% de IGV y lo suma al subtotal para obtener el total. Este cálculo
+      se actualiza cada vez que se modifica la cotización o sus ítems.
+    </p>
+  </div>
+
+  <div class="no-break">
+    <h3>¿Cómo cierro la sesión?</h3>
+    <p>
+      Hacer clic en el nombre de usuario en la barra superior derecha y seleccionar
+      <strong>"Cerrar sesión"</strong>. El sistema registra el evento de cierre en el log de auditoría.
+    </p>
+  </div>
+
+  <div class="no-break">
+    <h3>¿Qué hago si olvidé mi contraseña?</h3>
+    <p>
+      Contactar al administrador del sistema para que restablezca la contraseña desde el módulo
+      de <strong>Seguridad → Gestión de Usuarios → Editar usuario</strong>.
+    </p>
+  </div>
+
+  <div class="no-break">
+    <h3>¿Los datos del Dashboard se actualizan en tiempo real?</h3>
+    <p>
+      Los datos se actualizan al cargar o recargar la página (F5). No hay actualización automática
+      en segundo plano. Para ver datos actualizados, recargar la página del Dashboard.
+    </p>
+  </div>
+
+  <div class="no-break" style="margin-top:32px; border-top:2px solid var(--gray-200); padding-top:24px; text-align:center; color:var(--gray-500); font-size:9pt;">
+    <p>
+      <strong>CORFIEM ERP</strong> — Manual de Usuario v1.0<br>
+      Documento de uso interno. Prohibida su reproducción sin autorización.<br>
+      © 2026 CORFIEM. Todos los derechos reservados.
+    </p>
+  </div>
+</div>
+
+</div><!-- /doc -->
+
+<script>
+  // Keyboard shortcut: Ctrl+P triggers print
+  document.addEventListener('keydown', function(e) {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
+      e.preventDefault();
+      window.print();
+    }
+  });
+</script>
+</body>
+</html>
