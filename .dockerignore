@@ -3,7 +3,7 @@
 .gitignore
 
 # Configuración local sensible (se genera en runtime desde env vars)
-config/config.php
+#config/config.php
 
 # Claude Code
 .claude
