@@ -1,0 +1,54 @@
+steps:
+  # 1. Build
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - build
+      - -t
+      - '$_REGION-docker.pkg.dev/$PROJECT_ID/$_REPO/$_SERVICE:$COMMIT_SHA'
+      - -t
+      - '$_REGION-docker.pkg.dev/$PROJECT_ID/$_REPO/$_SERVICE:latest'
+      - .
+
+  # 2. Push
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - push
+      - '--all-tags'
+      - '$_REGION-docker.pkg.dev/$PROJECT_ID/$_REPO/$_SERVICE'
+
+  # 3. Deploy a Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - run
+      - deploy
+      - '$_SERVICE'
+      - '--image=$_REGION-docker.pkg.dev/$PROJECT_ID/$_REPO/$_SERVICE:$COMMIT_SHA'
+      - '--region=$_REGION'
+      - '--platform=managed'
+      - '--allow-unauthenticated'
+      - '--port=8080'
+      - '--memory=512Mi'
+      - '--cpu=1'
+      - '--min-instances=0'
+      - '--max-instances=5'
+      - '--add-cloudsql-instances=$PROJECT_ID:$_REGION:$_DB_INSTANCE'
+      - '--set-env-vars=APP_URL=https://$_SERVICE_DOMAIN,DB_HOST=/cloudsql/$PROJECT_ID:$_REGION:$_DB_INSTANCE,DB_PORT=5432,DB_NAME=$_DB_NAME,DB_USER=$_DB_USER,AI_ENABLED=false'
+      - '--update-secrets=DB_PASS=$_SECRET_DB_PASS:latest'
+
+images:
+  - '$_REGION-docker.pkg.dev/$PROJECT_ID/$_REPO/$_SERVICE:$COMMIT_SHA'
+  - '$_REGION-docker.pkg.dev/$PROJECT_ID/$_REPO/$_SERVICE:latest'
+
+substitutions:
+  _REGION: us-central1
+  _REPO: corfiem
+  _SERVICE: corfiem-erp
+  _SERVICE_DOMAIN: corfiem-erp.run.app   # reemplazar con la URL real de Cloud Run
+  _DB_INSTANCE: corfiem-db               # nombre de la instancia Cloud SQL
+  _DB_NAME: corfiem_db
+  _DB_USER: corfiem_user
+  _SECRET_DB_PASS: corfiem-db-pass       # nombre del secreto en Secret Manager
+
+options:
+  logging: CLOUD_LOGGING_ONLY

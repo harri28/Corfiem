@@ -32,8 +32,12 @@ RUN sed -i 's/^Listen 80$/Listen 8080/' /etc/apache2/ports.conf \
 
 WORKDIR /var/www/html
 
-# Copiar la app
+# Copiar la app (config/config.php excluido por .dockerignore — se genera en runtime)
 COPY . .
+
+# Entrypoint: genera config.php desde env vars al iniciar el contenedor
+COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
 # Permisos y carpeta uploads
 RUN mkdir -p uploads/ \
@@ -43,4 +47,5 @@ RUN mkdir -p uploads/ \
 # Puerto para Cloud Run
 EXPOSE 8080
 
+ENTRYPOINT ["docker-entrypoint.sh"]
 CMD ["apache2-foreground"]
