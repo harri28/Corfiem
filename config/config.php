@@ -10,11 +10,11 @@ define('APP_URL',     'http://localhost/Corfiem_Cesar');
 define('APP_PATH',    dirname(__DIR__));
 
 // --- Base de datos ---
-define('DB_HOST',     'localhost');
-define('DB_PORT',     '5432');
-define('DB_NAME',     'corfiem_db');
-define('DB_USER',     'postgres');
-define('DB_PASS',     '1234');
+define('DB_HOST', getenv('DB_HOST') ?: 'localhost');
+define('DB_PORT', getenv('DB_PORT') ?: '5432');
+define('DB_NAME', getenv('DB_NAME') ?: 'corfiem_db');
+define('DB_USER', getenv('DB_USER') ?: 'postgres');
+define('DB_PASS', getenv('DB_PASS') ?: '1234');
 
 // --- Rutas de archivos ---
 define('UPLOADS_PATH', APP_PATH . '/uploads');
